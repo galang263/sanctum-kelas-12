@@ -13,13 +13,13 @@
 
       <!-- Kolom Kiri: Poster -->
       <div class="detail-poster">
-        <img :src="film.poster" :alt="film.title" />
+        <img :src="film.poster" :alt="film.judul_film" />
         <span class="genre-badge">{{ film.nama_genre }}</span>
       </div>
 
       <!-- Kolom Kanan: Info -->
       <div class="detail-info">
-        <h1>{{ film.title }}</h1>
+        <h1>{{ film.judul_film }}</h1>
 
         <div class="meta-list">
           <div class="meta-item">
@@ -32,12 +32,12 @@
           </div>
           <div class="meta-item">
             <span class="meta-label">📅 Tanggal Rilis</span>
-            <span>{{ film.tanggal_rilis }}</span>
+            <span>{{ film.tahun_rilis }}</span>
           </div>
         </div>
 
         <div class="deskripsi">
-          <h3>📖 Sinopsis</h3>
+          <h3>📖 Deskripsi</h3>
           <p>{{ film.deskripsi }}</p>
         </div>
 
