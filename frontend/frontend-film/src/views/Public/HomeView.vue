@@ -32,7 +32,7 @@
       >
         <!-- Poster film dengan overlay -->
         <div class="film-poster">
-          <img :src="film.poster" :alt="film.title" />
+          <img :src="film.poster" :alt="film.judul_film" />
           <div class="film-overlay">
             <RouterLink :to="'/film/' + film.id" class="btn btn-primary">
               Lihat Detail
@@ -42,10 +42,10 @@
 
         <!-- Info film -->
         <div class="film-info">
-          <h3 class="film-title">{{ film.title }}</h3>
+          <h3 class="film-title">{{ film.judul_film }}</h3>
           <div class="film-meta">
             <span class="badge">{{ film.nama_genre }}</span>
-            <span class="film-year">📅 {{ film.tanggal_rilis?.substring(0, 4) }}</span>
+            <span class="film-year">📅 {{ film.tahun_rilis }}</span>
           </div>
           <p class="film-director">🎬 {{ film.sutradara }}</p>
           <p class="film-duration">⏱️ {{ film.durasi }} menit</p>

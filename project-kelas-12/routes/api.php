@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\Api\AktorController;
 use App\Http\Controllers\Api\FilmController;
+use App\Http\Controllers\Api\PublicController;
 
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -22,14 +23,32 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/genre/{id}', [GenreController::class, 'update']);
     Route::delete('/genre/{id}', [GenreController::class, 'destroy']);
 
-    route::get('/aktor', [AktorController::class, 'index']);
-    route::post('/aktor', [AktorController::class, 'store']);
-    route::put('/aktor/{id}', [AktorController::class, 'update']);
-    route::delete('/aktor/{id}', [AktorController::class, 'destroy']);
+    Route::get('/aktor', [AktorController::class, 'index']);
+    Route::post('/aktor', [AktorController::class, 'store']);
+    Route::put('/aktor/{id}', [AktorController::class, 'update']);
+    Route::delete('/aktor/{id}', [AktorController::class, 'destroy']);
 
-    route::get('/film', [FilmController::class, 'index']);
-    route::post('/film', [FilmController::class, 'store']);
-    route::get('/film/{id}', [FilmController::class, 'show']);
-    route::put('/film/{id}', [FilmController::class, 'update']);
-    route::delete('/film/{id}', [FilmController::class, 'destroy']);
+    Route::get('/film', [FilmController::class, 'index']);
+    Route::post('/film', [FilmController::class, 'store']);
+    Route::get('/film/{id}', [FilmController::class, 'show']);
+    Route::put('/film/{id}', [FilmController::class, 'update']);
+    Route::delete('/film/{id}', [FilmController::class, 'destroy']);
+
+    
+});
+
+
+Route::prefix('public')->group(function () {
+
+    Route::get('/films', [PublicController::class, 'films']);
+    Route::get('/films/{id}', [PublicController::class, 'detailFilm']);
+
+    Route::get('/genres', [PublicController::class, 'genres']);
+    Route::get('/genres/{id}/films', [PublicController::class, 'filmByGenre']);
+
+    Route::get('/actors', [PublicController::class, 'actors']);
+    Route::get('/actors/{id}/films', [PublicController::class, 'filmByActor']);
+
+    Route::get('/search', [PublicController::class, 'search']);
+
 });
