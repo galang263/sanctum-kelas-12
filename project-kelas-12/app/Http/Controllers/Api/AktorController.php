@@ -34,7 +34,7 @@ class AktorController extends Controller
                 'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
                 'tanggal_lahir' => 'required|date',
                 'umur' => 'required|integer',
-                'foto' => 'nullable|image|max:2048'
+                'foto' => 'nullable|string'
             ]);
 
             $aktor = new Aktor();
@@ -42,13 +42,9 @@ class AktorController extends Controller
             $aktor->jenis_kelamin = $request->jenis_kelamin;
             $aktor->tanggal_lahir = $request->tanggal_lahir;
             $aktor->umur = $request->umur;
+            $aktor->foto = $request->foto;
 
-            if ($request->hasFile('foto')) {
-                $file = $request->file('foto');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('uploads/aktors'), $filename);
-                $aktor->foto = 'uploads/aktors/' . $filename;
-            }
+
 
             $aktor->save();
 
@@ -77,8 +73,17 @@ class AktorController extends Controller
             }
             $validated = $request->validate([
                 'nama_aktor' => 'required|unique:aktors,nama_aktor,'.$id,
+                'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+                'tanggal_lahir' => 'required|date',
+                'umur' => 'required|integer',
+                'foto' => 'nullable|string'
             ]);
             $aktor->nama_aktor = $request->nama_aktor;
+            $aktor->jenis_kelamin = $request->jenis_kelamin;
+            $aktor->tanggal_lahir = $request->tanggal_lahir;
+            $aktor->umur = $request->umur;
+            $aktor->foto = $request->foto;
+
             $aktor->save();
 
             return response()->json([

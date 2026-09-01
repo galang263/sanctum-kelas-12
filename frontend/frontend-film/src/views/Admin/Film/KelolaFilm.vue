@@ -103,7 +103,7 @@ const konfirmasiHapus = async () => {
 
   try {
     deletingId.value = id
-    await api.delete(`/public/films/${id}`)
+    await api.delete(`film/${id}`)
 
     // Hapus dari array lokal (tampilan update tanpa reload)
     films.value = films.value.filter(film => film.id !== id)

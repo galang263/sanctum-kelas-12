@@ -11,30 +11,37 @@
     <form @submit.prevent="handleSubmit" class="form-card">
       <div class="form-group">
         <label>🎬 Judul Film <span class="required">*</span></label>
-        <input v-model="form.title" type="text" placeholder="Contoh: Avengers Endgame" required />
+        <input v-model="form.judul_film" type="text" placeholder="Contoh: Avengers Endgame" required />
       </div>
 
       <div class="form-group">
         <label>🎭 Genre <span class="required">*</span></label>
-        <select v-model="form.id_genre" required>
+        <select v-model="form.genre_id" required>
           <option value="">-- Pilih Genre --</option>
-          <!-- v-for untuk mengisi dropdown dari data API -->
           <option v-for="genre in genres" :key="genre.id" :value="genre.id">
             {{ genre.nama_genre }}
           </option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label>🎥 Sutradara <span class="required">*</span></label>
-        <input v-model="form.sutradara" type="text" placeholder="Nama Sutradara" required />
+      <div class="form-row">
+        <div class="form-group">
+          <label>🎥 Sutradara <span class="required">*</span></label>
+          <input v-model="form.sutradara" type="text" placeholder="Nama Sutradara" required />
+        </div>
+        <div class="form-group">
+          <label>⭐ Rating <span class="required">*</span></label>
+          <input v-model="form.rating" type="number" placeholder="Contoh: 8.5" min="0" max="10" step="0.1" required />
+        </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>📅 Tanggal Rilis <span class="required">*</span></label>
-          <input v-model="form.tanggal_rilis" type="date" required />
+          <input v-model="form.tahun_rilis" type="
+          number" :max="new Date().getFullYear" placeholder="2026" required />
         </div>
+
         <div class="form-group">
           <label>⏱️ Durasi (menit) <span class="required">*</span></label>
           <input v-model="form.durasi" type="number" placeholder="120" min="1" required />
@@ -44,16 +51,14 @@
       <div class="form-group">
         <label>🖼️ URL Poster <span class="required">*</span></label>
         <input v-model="form.poster" type="text" placeholder="https://..." required />
-        <!-- Preview gambar otomatis saat URL diisi -->
         <img v-if="form.poster" :src="form.poster" alt="Preview Poster" class="poster-preview" />
       </div>
 
       <div class="form-group">
         <label>🎭 Pilih Aktor <span class="required">*</span></label>
         <div class="checkbox-grid">
-          <!-- v-model pada checkbox dengan array: nilai terpilih masuk ke id_aktor[] -->
           <label v-for="aktor in aktors" :key="aktor.id" class="checkbox-item">
-            <input type="checkbox" :value="aktor.id" v-model="form.id_aktor" />
+            <input type="checkbox" :value="aktor.id" v-model="form.aktor_id" />
             <span>{{ aktor.nama_aktor }}</span>
           </label>
         </div>
@@ -88,26 +93,25 @@ const errorMsg   = ref('')
 const genres     = ref([])
 const aktors     = ref([])
 
-// reactive() untuk form dengan banyak field
+// Variabel disesuaikan agar cocok dengan v-model di template
 const form = reactive({
-  title:         '',
-  id_genre:      '',
+  judul_film:    '',
+  genre_id:      '',
   sutradara:     '',
-  tanggal_rilis: '',
+  rating:        '', // <- Tambahan Rating
+  tahun_rilis:   '',
   durasi:        '',
   poster:        '',
   deskripsi:     '',
-  id_aktor:      [],   // Array karena bisa pilih BANYAK aktor
+  aktor_id:      [],
 })
 
 onMounted(async () => {
   await ambilDataAwal()
 })
 
-// Ambil genre & aktor secara PARALEL (lebih cepat dari satu per satu)
 const ambilDataAwal = async () => {
   try {
-    // Promise.all: jalankan beberapa request BERSAMAAN
     const [genreRes, aktorRes] = await Promise.all([
       api.get('/genre'),
       api.get('/aktor'),
@@ -121,7 +125,7 @@ const ambilDataAwal = async () => {
 }
 
 const handleSubmit = async () => {
-  if (form.id_aktor.length === 0) {
+  if (form.aktor_id.length === 0) {
     errorMsg.value = 'Pilih minimal 1 aktor!'
     return
   }
@@ -131,15 +135,16 @@ const handleSubmit = async () => {
     errorMsg.value   = ''
     successMsg.value = ''
 
-    // POST request ke /films (token otomatis dari api.js)
-    await api.post('/films', form)
+    await api.post('/film', form)
 
     successMsg.value = 'Film berhasil ditambahkan!'
 
-    // Reset semua field form ke nilai awal
+    router.push('/kelola-film')
+
+    // Reset nilai form, termasuk rating
     Object.assign(form, {
-      title: '', id_genre: '', sutradara: '',
-      tanggal_rilis: '', durasi: '', poster: '',
+      judul_film: '', ganre_id: '', sutradara: '', rating: '',
+      tahun_rilis: '', durasi: '', poster: '',
       deskripsi: '', id_aktor: []
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
